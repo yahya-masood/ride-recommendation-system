@@ -1,0 +1,37 @@
+{
+  "note": "SYNTHETIC DEMO DATA. These eight places are made-up names for testing. They are not real Faisalabad locations.",
+  "locations": [
+    {
+      "id": "L01",
+      "name": "Central Station"
+    },
+    {
+      "id": "L02",
+      "name": "University Campus"
+    },
+    {
+      "id": "L03",
+      "name": "City Mall"
+    },
+    {
+      "id": "L04",
+      "name": "Market Square"
+    },
+    {
+      "id": "L05",
+      "name": "Hospital Road"
+    },
+    {
+      "id": "L06",
+      "name": "Office Park"
+    },
+    {
+      "id": "L07",
+      "name": "Park View"
+    },
+    {
+      "id": "L08",
+      "name": "Bus Terminal"
+    }
+  ]
+}

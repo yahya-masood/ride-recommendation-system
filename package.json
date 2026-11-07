@@ -1,0 +1,6 @@
+{
+  "name": "ride-recommendation-system",
+  "private": true,
+  "type": "module",
+  "description": "Only used so that Node can run the tests in tests/. The website itself does not need Node."
+}
