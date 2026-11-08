@@ -4,26 +4,22 @@ Project: AI Enabled Ride Booking and Driver Route Recommendation System
 Group: Yahya Masood (25F-3036), Sami Ahsan (25F-3098)
 Version: corrected draft v4 (for group review). Source of truth: our SRS (Assignment 4) and the Course Project guidelines.
 
-**Requirement numbers (important):** the requirement numbers below come from the numbering given by the group in the review messages. **The latest SRS file was not available to the author of this file, so these numbers were not checked against it.** Where the new number is not known, the text uses the requirement name and the words "number to check". UC (use case) numbers were not changed and are also unchecked.
+**Requirement numbers:** all FR, NFR and UC numbers in this file and in the three diagrams follow **SRS Version 1 (Assignment 4)** and were checked against the SRS PDF. The numbers used in this file are:
 
-| Requirement | Number used | Meaning |
-|---|---|---|
-| FR-07 | given in review | filter requests by route compatibility and time window |
-| FR-08 | given in review | calculate detour and apply the maximum detour limit (default 5 km) |
-| FR-09 | given in review | estimate fuel cost from detour, vehicle fuel efficiency (km/litre) and fuel price |
-| FR-10 | given in review | estimated profit = estimated fare - estimated fuel cost |
-| FR-11 | given in review | rank with the four weights 25 / 25 / 20 / 30 |
-| FR-12 | given in review | recommend the highest-ranked request, show no-match information |
-| FR-14 | given in review | driver must explicitly confirm or reject |
-| FR-15 | given in review | handle rejection |
-| FR-16 | given in review | confirm and lock the request only after driver confirmation |
-| FR-17 | given in review | recommendation timeout, never confirms automatically |
-| FR-18 | given in review | notify the passenger after confirmation |
-| FR-22 to FR-24 | given in review | administration, settings, audit logging (which number is which: to check) |
-| NFR-04 | given in review | Privacy: passenger contact details protected until driver confirmation |
-| NFR-05 | given in review | Usability: confirm or reject within 3 clicks or taps |
-| NFR-08 | given in review | Integrity: one request to one driver; confirmation completed fully or not at all |
-| NFR-10 | given in review | Transparency: show the criteria values and score of every recommendation |
+| Requirement (SRS Version 1) | Meaning |
+|---|---|
+| FR-04 Request Analysis and Filtering | analyze requests only while the driver's window is active; keep requests along or near the route and inside the time window |
+| FR-05 Request Evaluation and Ranking | detour and maximum detour limit (default 5 km); fuel cost from detour, driver's fuel efficiency and fuel price; profit = estimated fare - estimated fuel cost; rank with the weights 25 / 25 / 20 / 30 |
+| FR-06 Ride Recommendation | recommend the highest-ranked request, "no match" message, up to three alternatives |
+| FR-07 Driver Confirmation and Passenger Notification | driver must confirm or reject; rejection handling; lock only after confirmation; timeout (default 2 minutes) never confirms; notify the passenger |
+| FR-08 Administration | user accounts and recommendation settings |
+| FR-09 Audit Logging | audit log (read-only for the Administrator) |
+| FR-10 Ride History | driver's history of confirmed rides |
+| NFR-01 Usability | simple, responsive, mobile-friendly; confirm or reject within 3 clicks/taps |
+| NFR-03 Security | secure authentication, hashed passwords, HTTPS, 15 minute inactivity logout, audit log not editable |
+| NFR-04 Privacy | passenger contact details hidden from a driver until that driver confirms; recommendations show only the first name and the locations |
+| NFR-05 Data Integrity | a request is assigned to only one driver; confirmation updates are completed fully or not at all |
+| NFR-08 Explainability | every recommendation shows the criteria values and the score |
 
 **How to read the labels in this file**
 - **[SRS]** comes directly from the SRS.
@@ -45,18 +41,18 @@ The system runs completely in the browser.
 
 | File | Purpose | SRS link | Status |
 |---|---|---|---|
-| `js/storage.js` | Only file that uses Local Storage and loads JSON | integrity NFR-08 (best effort, see 4b) | Written. 124 Node checks pass (storage logic only, see section 10) |
-| `js/auth.js` | Register, login, role check, 15 minute logout | Authentication and security requirements (numbers to check) | Not written |
-| `js/routePlan.js` | Define, change, end route plan and window | Route plan and time window requirement (number to check) | Not written |
-| `js/rideRequest.js` | Submit, validate, cancel, expire requests | Ride request management requirement (number to check) | Not written |
-| `js/recommendationEngine.js` | Filter, detour, fuel cost, profit, rank | FR-07 to FR-12 | Not written |
-| `js/decision.js` | Confirm, reject, timeout, lock request | FR-14 to FR-17 | Not written |
-| `js/notification.js` | Passenger and driver notifications | FR-18 (passenger); notice to driver when a ride is cancelled: number to check | Not written |
-| `js/settings.js` | Get and check recommendation settings | FR-22 to FR-24 | Not written |
-| `js/admin.js` | Create, update, deactivate users | FR-22 to FR-24 | Not written |
-| `js/auditLog.js` | Record and read audit log | FR-22 to FR-24 | Not written |
-| `js/rideHistory.js` | Driver ride history | Ride history requirement (number to check) | Not written |
-| `js/ui.js` | DOM updates and event listeners | NFR-05 (Usability) | Not written |
+| `js/storage.js` | Only file that uses Local Storage and loads JSON | data integrity NFR-05 (best effort, see 4b) | Written. 124 Node checks pass (storage logic only, see section 10) |
+| `js/auth.js` | Register, login, role check, 15 minute logout | FR-01, NFR-03 | Not written |
+| `js/routePlan.js` | Define, change, end route plan and window | FR-02 | Not written |
+| `js/rideRequest.js` | Submit, validate, cancel, expire requests | FR-03 | Not written |
+| `js/recommendationEngine.js` | Filter, detour, fuel cost, profit, rank | FR-04, FR-05, FR-06 | Not written |
+| `js/decision.js` | Confirm, reject, timeout, lock request | FR-07 | Not written |
+| `js/notification.js` | Passenger and driver notifications | FR-03, FR-07 | Not written |
+| `js/settings.js` | Get and check recommendation settings | FR-08 | Not written |
+| `js/admin.js` | Create, update, deactivate users | FR-08 | Not written |
+| `js/auditLog.js` | Record and read audit log | FR-09 | Not written |
+| `js/rideHistory.js` | Driver ride history | FR-10 | Not written |
+| `js/ui.js` | DOM updates and event listeners | NFR-01 | Not written |
 
 `settings.js` was added as a separate file in this version because the SRS class diagram has a separate Settings class. Previously the diagrams showed it inside admin.js. The Component Diagram and Sequence Diagram 1 were updated to match.
 
@@ -68,8 +64,8 @@ The SRS Deployment Diagram describes a web server and a database server. The SRS
 |---|---|---|
 | Database server (SQL) | Local Storage + JSON files | Simulation. Data stays in one browser. |
 | Web server and application modules | JavaScript modules in the browser | Same modules as the SRS Package Diagram. |
-| HTTPS (security requirement) | Provided by GitHub Pages | Not built by us. |
-| Hashed passwords (security requirement) | Browser Web Crypto hash | Simulation, not real security. |
+| HTTPS (NFR-03) | Provided by GitHub Pages | Not built by us. |
+| Hashed passwords (NFR-03) | Browser Web Crypto hash | Simulation, not real security. |
 | 15 minute inactivity logout | Browser timer | Works only while the page is open. |
 | 2 minute recommendation timeout | Browser timer | Same limit. |
 | AI recommendation | Rule-based weighted score | As the SRS says. No machine learning. |
@@ -108,7 +104,7 @@ session            { userId, role, lastActivityAt }
 
 ## 4b. Saving a confirmation (data integrity requirement): what we can and cannot promise
 
-**Integrity requirement [SRS] (NFR-08):** a request is assigned to only one driver, and a confirmation is "completed fully or not at all".
+**Data Integrity requirement [SRS] (NFR-05):** a request is assigned to only one driver, and a confirmation is "completed fully or not at all".
 
 **Why Local Storage cannot give a true atomic transaction.** A real database has transactions: a group of changes is committed together, other users are locked out during the change, and after a crash the database recovers to a clean state. Local Storage has none of this:
 - every `setItem` call is a separate write; there is no begin / commit / rollback;
@@ -166,12 +162,12 @@ So an earlier version with several writes and a rollback (`saveListsTogether()`)
 
 Terms: S = driver source, D = driver destination, P = passenger pickup, Q = passenger drop-off, d(X,Y) = distance from the table.
 
-- **[SRS FR-07]** keep requests whose pickup and drop-off lie "along or near the route" and whose pickup time is inside the driver window. **The SRS does not say how to measure "along or near".**
+- **[SRS FR-04]** keep requests whose pickup and drop-off lie "along or near the route" and whose pickup time is inside the driver window. **The SRS does not say how to measure "along or near".**
 - **[ASSUMPTION A1]** For one place X, via(X) = d(S,X) + d(X,D) - d(S,D). This is the extra km needed to pass through X. A place on the direct path has via = 0. via is never below 0 because of the triangle rule (the code should still clamp at 0 to be safe).
 - **[ASSUMPTION A2]** A request is route compatible when via(P) <= max detour AND via(Q) <= max detour AND d(S,P) <= d(S,Q) AND pickup time is inside the window. The SRS itself only says "along or near the route" and "inside the time window". The condition d(S,P) <= d(S,Q) is **our own simplification**.
-- **[SRS FR-08 + ASSUMPTION A3]** detour = d(S,P) + d(P,Q) + d(Q,D) - d(S,D). Requests with detour above the limit (default 5 km) are removed.
-- **[SRS FR-09]** estimated fuel cost = detour / vehicle fuel efficiency (km per litre) x fuel price.
-- **[SRS FR-10]** estimated profit = estimated fare - estimated fuel cost, where estimated fare = trip distance x per-km rate.
+- **[SRS FR-05 + ASSUMPTION A3]** detour = d(S,P) + d(P,Q) + d(Q,D) - d(S,D). Requests with detour above the limit (default 5 km) are removed.
+- **[SRS FR-05]** estimated fuel cost = detour / vehicle fuel efficiency (km per litre) x fuel price.
+- **[SRS FR-05]** estimated profit = estimated fare - estimated fuel cost, where estimated fare = trip distance x per-km rate.
 - **[ASSUMPTION A4]** "trip distance" is d(P,Q), the distance the passenger travels.
 
 **What d(S,P) <= d(S,Q) really is:** a rough heuristic for our synthetic demo data. It is **not** a reliable route-direction check. In simple words: "the pickup must not be farther from the driver's start than the drop-off". Why it can be wrong:
@@ -208,7 +204,7 @@ Total score = (25 x route + 25 x detour + 20 x fuel + 30 x profit) / 100. Weight
 
 Three different things, kept apart:
 1. **Vehicle fuel efficiency** is km per litre. The driver enters it in the profile.
-2. **Estimated fuel cost** of the detour = detour / km per litre x fuel price (SRS FR-09 wording).
+2. **Estimated fuel cost** of the detour = detour / km per litre x fuel price (SRS FR-05 wording).
 3. **Fuel score** = 100 x (1 - fuel cost / fare). This is a **normalized comparison used for ranking**, from 0 to 100. It is **not** a km/litre number.
 
 Because the fuel cost uses km per litre, a more efficient vehicle has a lower fuel cost and so a higher fuel score. Vehicle efficiency therefore does affect the score, but the score itself measures "how much of the fare would the detour fuel eat". **The SRS gives the criterion name but no formula**, so the name "fuel efficiency" and our formula do not match exactly. This is a mismatch in wording, and the smallest correction is **naming only; the formula is unchanged**. In code and screens we use clear names: `detourFuelCost` for the money amount and `fuelCostScore` for the ranking score (shown to the driver as "Fuel efficiency (fuel cost vs fare)"). If the instructor expects a different meaning, ask before the engine is written.
@@ -254,7 +250,7 @@ The SRS weights stay exactly 25 / 25 / 20 / 30. The engine must never rescale or
 - scores: route 56.0, detour 12.0, fuel 60.7, profit 71.5 (best profit among candidates = Rs 221.33)
 - total = 0.25x56.0 + 0.25x12.0 + 0.20x60.7 + 0.30x71.5 = **50.6**
 
-**Example 3 (excluded): Hospital Road to University Campus**: detour = 5.4 + 12.9 + 0 - 12.4 = 5.9 km, which is more than the 5 km limit, so the request is removed before ranking (SRS FR-08). It never gets a score.
+**Example 3 (excluded): Hospital Road to University Campus**: detour = 5.4 + 12.9 + 0 - 12.4 = 5.9 km, which is more than the 5 km limit, so the request is removed before ranking (SRS FR-05). It never gets a score.
 
 **Ranking of the three valid requests** (best profit = Rs 221.33):
 
@@ -308,19 +304,19 @@ The Node tests do not prove that the website works. They only check one module i
 5. Distance data rules (section 6), including "distance must be greater than 0", "symmetric within 0.05 km" and "triangle rule not enforced".
 6. Demo defaults, labelled as demonstration assumptions: fare Rs 30/km, fuel Rs 280/litre, vehicle 12 km/litre. `vehicleSeats` is kept because it is in the SRS data model, and it is not used for any check.
 7. Keeping `tests/` and `package.json` in the folder (only needed to run the Node tests).
-8. **Requirement numbers.** Please check the table at the top of this file against the latest SRS file, which was not available to the author. Items marked "number to check" need the real number.
+8. Requirement numbers follow SRS Version 1 (checked against the SRS PDF). Nothing else to approve here.
 
 Already decided in the review and applied: negative-profit requests are not removed; the pickup/drop-off test stays a simple documented approximation; the fuel score keeps its formula and only gets clearer names.
 
-## 12. Checks against the requirements named in the review (by reading our files, not by running a website)
+## 12. Checks against the requirements named in the review, using SRS Version 1 numbers (by reading our files, not by running a website)
 
 | Requirement | What our files say | Result |
 |---|---|---|
-| FR-09 fuel cost vs fuel efficiency | Vehicle fuel efficiency is km per litre (driver profile). Estimated detour fuel cost = detour / km per litre x fuel price. They are kept as two separate things (section 8). The fuel score is a separate 0 to 100 ranking number. | Consistent |
-| FR-10 profit | Estimated profit = estimated fare - estimated fuel cost. A loss stays negative and is shown as a loss. | Consistent |
-| FR-14 and FR-16 | Sequence UC-07 starts with the driver pressing Confirm. The request is locked and saved only after that, inside the confirmation. Sequence UC-06 ends by only showing the recommendation. README steps 7 and 8 say the same. | Consistent |
-| FR-17 timeout | In Sequence UC-07 the timeout branch only marks the recommendation Expired, logs it and tells the driver. The request stays Pending. No lock, no ride, no confirmation in that branch. The timer itself is not written yet. | Consistent in design |
+| FR-05 fuel cost vs fuel efficiency | Vehicle fuel efficiency is km per litre (driver profile). Estimated detour fuel cost = detour / km per litre x fuel price. They are kept as two separate things (section 8). The fuel score is a separate 0 to 100 ranking number. | Consistent |
+| FR-05 profit | Estimated profit = estimated fare - estimated fuel cost. A loss stays negative and is shown as a loss. | Consistent |
+| FR-07 confirmation before lock | Sequence UC-07 starts with the driver pressing Confirm. The request is locked and saved only after that, inside the confirmation. Sequence UC-06 ends by only showing the recommendation. README steps 7 and 8 say the same. | Consistent |
+| FR-07 timeout | In Sequence UC-07 the timeout branch only marks the recommendation Expired, logs it and tells the driver. The request stays Pending. No lock, no ride, no confirmation in that branch. The timer itself is not written yet. | Consistent in design |
 | NFR-04 privacy | The recommendation record has no contact data. Only the first name and the locations are shown. A phone number (if approved) is read only after the confirmation was saved. | Consistent in design. Phone field still undecided. |
-| NFR-05 usability | The Figma Recommendation screen has Confirm and Reject buttons directly on it (1 tap). Not tested in a browser. | Design only |
-| NFR-08 integrity | One write with a revision number (section 4b). Best effort, not a real transaction. | Partly: best effort |
-| NFR-10 transparency | The recommendation screen shows route match, detour, fuel cost, profit and score. Not built yet. | Design only |
+| NFR-01 usability | The Figma Recommendation screen has Confirm and Reject buttons directly on it (1 tap). Not tested in a browser. | Design only |
+| NFR-05 data integrity | One write with a revision number (section 4b). Best effort, not a real transaction. | Partly: best effort |
+| NFR-08 explainability | The recommendation screen shows route match, detour, fuel cost, profit and score. Not built yet. | Design only |

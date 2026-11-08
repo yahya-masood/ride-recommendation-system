@@ -35,11 +35,11 @@ const ROLES = ["Driver", "Passenger", "Administrator"];
 // the SRS says the Administrator sets the fare rate and fuel price but gives no numbers.
 // farePerKm and fuelPrice are only starting values for our demo; the Administrator can change them.
 const DEFAULT_SETTINGS = {
-  maxDetourKm: 5,              // SRS FR-08 default (maximum detour limit)
-  weights: [25, 25, 20, 30],   // SRS FR-11: route, detour, fuel efficiency, profitability
+  maxDetourKm: 5,              // SRS FR-05 default (maximum detour limit)
+  weights: [25, 25, 20, 30],   // SRS FR-05: route, detour, fuel efficiency, profitability
   farePerKm: 30,               // demonstration assumption (Rs per km)
   fuelPrice: 280,              // demonstration assumption (Rs per litre)
-  responseTimeoutMin: 2        // SRS FR-17 default (minutes)
+  responseTimeoutMin: 2        // SRS FR-07 default (minutes)
 };
 
 // ---------- small helpers ----------
@@ -164,7 +164,7 @@ export function getRideDataRevision() {
 //   const result = saveRideData({ rideRequests, recommendations, rides }, rev);
 //   // result = { ok: true, revision } or { ok: false, reason: "conflict" | "write-failed" | "bad-input" }
 //
-// Why this design (SRS NFR-08, Integrity, says a request goes to only one driver
+// Why this design (SRS NFR-05, Data Integrity, says a request goes to only one driver
 // and a confirmation is "completed fully or not at all"):
 //  - A single setItem call stores the whole value or throws, so the three lists can never be
 //    half saved by this function. (Several separate setItem calls with a rollback can fail
