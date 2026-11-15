@@ -1,0 +1,268 @@
+/* ==========================================================================
+   base.css - global foundations for every page
+   Loads AFTER tokens.css (colors, fonts, radius come from there).
+   Contains: extra tokens, reset, typography, page layout, small utilities.
+   Mobile-first: the default styles are for phones (Figma 375 px),
+   and one breakpoint at 768 px switches to the desktop layout (Figma 1440 px).
+   ========================================================================== */
+
+/* ---------- 1. Extra tokens -------------------------------------------------
+   These values are used in the Figma design but are NOT in tokens.css.
+   tokens.css must not be changed in this task, so they live here.
+   (If the group agrees, they can be moved into tokens.css later.) */
+:root {
+  /* colors taken from the Figma components */
+  --color-surface-alt: #F1F5F9;     /* metric boxes */
+  --color-nav-link: #94A3B8;        /* inactive navigation links on the dark bar */
+  --color-accent-dark: #B45309;     /* text on the Pending badge */
+  --color-success-dark: #15803D;    /* text on the Confirmed badge */
+  --color-success-light: #DCFCE7;   /* Confirmed badge background */
+  --color-error-dark: #B91C1C;      /* text on the Cancelled badge, danger hover */
+  --color-error-light: #FEE2E2;     /* Cancelled badge background */
+
+  /* spacing scale (Figma uses 4, 6, 8, 12, 16, 20, 24, 32, 48) */
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* other shared values */
+  --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --focus-ring: 2px solid var(--color-primary);
+  --nav-height: 64px;
+  --width-content: 960px;   /* normal desktop pages */
+  --width-form: 640px;      /* single form pages */
+  --width-auth: 440px;      /* login and register */
+}
+
+/* ---------- 2. Reset ---------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  font: var(--font-body);
+  color: var(--color-secondary);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* form controls do not inherit the page font by default */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* JavaScript will show and hide things with the hidden attribute */
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- 3. Typography ------------------------------------------------
+   Sizes come from the font tokens in tokens.css (Figma Style Guide). */
+h1,
+h2,
+h3 {
+  color: var(--color-secondary);
+}
+
+h1 {
+  font: var(--font-h1);
+  font-size: 24px;          /* phones: Figma mobile page titles are 24 px bold */
+}
+
+h2 {
+  font: var(--font-h2);
+}
+
+h3 {
+  font: var(--font-h3);
+}
+
+small,
+.text-small {
+  font: var(--font-small);
+}
+
+.text-caption {
+  font: var(--font-caption);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-secondary {
+  color: var(--color-secondary-slate);
+}
+
+.text-center {
+  text-align: center;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* ---------- 4. Keyboard focus --------------------------------------------
+   Every link, button and control shows a clear ring when reached with the
+   keyboard. Form fields use their own border style (see components.css). */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- 5. Page layout ------------------------------------------------
+   <div class="page">
+     navigation (optional)
+     <main class="page__body"><div class="container"> ... </div></main>
+     bottom navigation (phones only, optional)
+   </div> */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.page__body {
+  flex: 1;                              /* pushes the bottom navigation down */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-6) var(--space-4);   /* phones: 24 top and bottom, 16 sides */
+}
+
+.container {
+  width: 100%;
+  max-width: var(--width-content);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.container--form {
+  max-width: var(--width-form);
+}
+
+.container--auth {
+  max-width: var(--width-auth);
+}
+
+/* ---------- 6. Small layout helpers ---------------------------------------- */
+/* vertical stack: children are spaced evenly (default gap 24 px) */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-6));
+}
+
+.stack--xs {
+  --stack-gap: var(--space-1);
+}
+
+.stack--sm {
+  --stack-gap: var(--space-3);
+}
+
+.stack--md {
+  --stack-gap: var(--space-4);
+}
+
+/* horizontal row that wraps on narrow screens */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.row--between {
+  justify-content: space-between;
+}
+
+.row--center {
+  justify-content: center;
+}
+
+/* equal cards side by side; one column on phones, up to three on desktop */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+
+/* hides something visually but keeps it for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- 7. Desktop (768 px and wider) ---------------------------------- */
+@media (min-width: 768px) {
+  h1 {
+    font: var(--font-h1);               /* back to the full 32 px token */
+  }
+
+  .page__body {
+    padding: var(--space-12);           /* Figma desktop: 48 px all around */
+  }
+
+  .card-grid {
+    gap: var(--space-6);
+  }
+}
+
+/* ---------- 8. Reduced motion ---------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

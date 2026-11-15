@@ -1,0 +1,517 @@
+/* ==========================================================================
+   components.css - reusable UI pieces (buttons, forms, cards, badges, navigation)
+   Loads AFTER tokens.css and base.css. Class names are plain and BEM-like:
+   .block, .block__part, .block--variant.
+   Mobile-first; the desktop changes are in the 768 px media query at the end.
+   ========================================================================== */
+
+/* ---------- 1. Buttons -------------------------------------------------------
+   <button class="btn btn--primary">Login</button>
+   Variants: btn--primary, btn--secondary, btn--danger. Add btn--block for full width.
+   A variant only sets four variables; .btn uses them, so hover and disabled
+   states are written once. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border: 1.5px solid var(--btn-border, transparent);
+  border-radius: var(--radius-md);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.btn:hover {
+  background: var(--btn-bg-hover);
+  color: var(--btn-fg-hover, var(--btn-fg));   /* also keeps the text color on <a class="btn"> */
+}
+
+.btn--primary {
+  --btn-bg: var(--color-primary);
+  --btn-bg-hover: var(--color-primary-dark);
+  --btn-fg: var(--color-surface);
+}
+
+.btn--secondary {
+  --btn-bg: var(--color-surface);
+  --btn-bg-hover: var(--color-primary-light);
+  --btn-fg: var(--color-primary);
+  --btn-fg-hover: var(--color-primary-dark);    /* darker text keeps good contrast on the light blue */
+  --btn-border: var(--color-primary);
+}
+
+.btn--danger {
+  --btn-bg: var(--color-error);
+  --btn-bg-hover: var(--color-error-dark);
+  --btn-fg: var(--color-surface);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* toggle button (for example the Passenger / Driver choice on Register):
+   set aria-pressed="true" on the selected one */
+.btn--secondary[aria-pressed="true"] {
+  --btn-bg: var(--color-primary);
+  --btn-bg-hover: var(--color-primary-dark);
+  --btn-fg: var(--color-surface);
+  --btn-fg-hover: var(--color-surface);
+}
+
+/* disabled: use the disabled attribute (or aria-disabled="true" on a link).
+   Written last so it wins over every variant. */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  --btn-bg: var(--color-disabled);
+  --btn-bg-hover: var(--color-disabled);
+  --btn-fg: var(--color-muted);
+  --btn-fg-hover: var(--color-muted);
+  --btn-border: transparent;
+  cursor: not-allowed;
+}
+
+/* a row of buttons that share the width (Submit / Cancel, Confirm / Reject) */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.actions > .btn {
+  flex: 1 1 140px;
+}
+
+/* ---------- 2. Forms ----------------------------------------------------------
+   <form class="form">
+     <div class="form-group">
+       <label class="form-label" for="email">Email</label>
+       <input class="form-control" id="email" type="email">
+       <p class="form-error" id="email-error">Please enter a valid email</p>
+     </div>
+   </form>
+   Invalid field: add aria-invalid="true" (or class is-invalid) to the control. */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+}
+
+.form-label {
+  font: var(--font-small);
+  font-weight: 500;
+  color: var(--color-secondary);
+}
+
+.form-control {
+  --input-border-color: var(--color-border);   /* Figma. Change this one line for a darker border */
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-secondary);
+  font: var(--font-body);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.form-control::placeholder {
+  color: var(--color-muted);
+  opacity: 1;
+}
+
+.form-control:hover {
+  --input-border-color: var(--color-disabled);
+}
+
+/* focus: 2 px primary border (1 px border + 1 px ring, so the layout does not move) */
+.form-control:focus {
+  outline: none;
+  --input-border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.form-control.is-valid {
+  --input-border-color: var(--color-success);
+}
+
+.form-control.is-invalid,
+.form-control[aria-invalid="true"] {
+  --input-border-color: var(--color-error);
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.form-control:disabled {
+  background: var(--color-bg);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+textarea.form-control {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.form-hint,
+.form-error {
+  font: var(--font-caption);
+}
+
+.form-hint {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.form-error {
+  color: var(--color-error);
+}
+
+/* ---------- 3. Cards and panels -----------------------------------------------
+   <section class="card"><h3 class="card__title">Title</h3><p class="card__text">Text</p></section>
+   card--highlight is the amber outline used for the recommended ride. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.card--highlight {
+  padding: calc(var(--space-5) - 1px);          /* 2 px border, same outer size */
+  border-width: 2px;
+  border-color: var(--color-accent);
+}
+
+.card__title {
+  font: var(--font-h3);
+}
+
+.card__text {
+  font: var(--font-small);
+  color: var(--color-secondary-slate);
+}
+
+/* small grey box (used for the criteria values on the recommendation) */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+}
+
+/* criteria values: two per row on phones, all in one row on desktop */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.metric__label {
+  font: var(--font-caption);
+  color: var(--color-secondary-slate);   /* Figma uses the lighter muted grey; this one passes contrast on the grey box */
+}
+
+.metric__value {
+  font: var(--font-body);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* page title with a short grey line under it */
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.page-header__sub {
+  font: var(--font-small);
+  color: var(--color-muted);
+}
+
+/* small amber label such as BEST MATCH on the recommendation card */
+.eyebrow {
+  font: var(--font-caption);
+  font-weight: 700;
+  color: var(--color-accent-dark);
+}
+
+/* app name above the login and register cards */
+.brand {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-primary);
+}
+
+/* ---------- 4. Badges (status labels) ------------------------------------------
+   <span class="badge badge--pending">Pending</span>
+   Statuses from the SRS: Pending, Confirmed, Cancelled, Expired.
+   badge--active and badge--deactivated reuse the Confirmed and Cancelled colors
+   (as in the Figma Manage Users screen). */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) 10px;
+  border-radius: 999px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font: var(--font-caption);
+  white-space: nowrap;
+}
+
+/* inside a card (a column) the badge keeps its own width instead of stretching */
+.card > .badge {
+  align-self: flex-start;
+}
+
+.badge--pending {
+  --badge-bg: var(--color-accent-light);
+  --badge-fg: var(--color-accent-dark);
+}
+
+.badge--confirmed,
+.badge--active {
+  --badge-bg: var(--color-success-light);
+  --badge-fg: var(--color-success-dark);
+}
+
+.badge--cancelled,
+.badge--deactivated {
+  --badge-bg: var(--color-error-light);
+  --badge-fg: var(--color-error-dark);
+}
+
+.badge--expired {
+  --badge-bg: var(--color-border);
+  --badge-fg: var(--color-secondary-slate);
+}
+
+/* ---------- 5. Messages ---------------------------------------------------------
+   NOT in the Figma design. A small box for the error and success messages that
+   the SRS use cases ask for. Use role="alert" on it. Built only from existing colors. */
+.alert {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--alert-border);
+  border-radius: var(--radius-md);
+  background: var(--alert-bg);
+  color: var(--alert-fg);
+  font: var(--font-small);
+}
+
+.alert--error {
+  --alert-bg: var(--color-error-light);
+  --alert-border: var(--color-error);
+  --alert-fg: var(--color-error-dark);
+}
+
+.alert--success {
+  --alert-bg: var(--color-success-light);
+  --alert-border: var(--color-success);
+  --alert-fg: var(--color-success-dark);
+}
+
+.alert--warning {
+  --alert-bg: var(--color-accent-light);
+  --alert-border: var(--color-accent);
+  --alert-fg: var(--color-accent-dark);
+}
+
+/* ---------- 6. List rows (inside a card) -----------------------------------------
+   <article class="card"><div class="item">
+     <div class="item__main"><p class="item__title">...</p><p class="item__meta">...</p></div>
+     <div class="item__actions"><span class="badge ...">...</span><button class="btn btn--secondary">Cancel request</button></div>
+   </div></article>
+   Phones: stacked. Desktop: one row. */
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.item__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.item__title {
+  font: var(--font-body);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.item__meta {
+  font: var(--font-small);
+  color: var(--color-secondary-slate);
+}
+
+.item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* audit log line: time, user, action, record (stacked on phones, 4 columns on desktop) */
+.entry {
+  display: grid;
+  gap: var(--space-1);
+  font: var(--font-small);
+}
+
+.entry__time {
+  font-weight: 500;
+  color: var(--color-secondary-slate);
+}
+
+.entry__user {
+  font-weight: 600;
+}
+
+.entry__record {
+  color: var(--color-muted);
+}
+
+/* ---------- 7. Navigation ----------------------------------------------------------
+   Desktop: .navbar (dark bar at the top). Phones: .topbar (dark bar at the top)
+   and .bottom-nav (white bar at the bottom). Only one set is visible at a time.
+   Mark the current page with aria-current="page". */
+.navbar {
+  display: none;
+}
+
+.navbar__brand,
+.topbar__brand {
+  color: var(--color-surface);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.navbar__brand {
+  font-size: 20px;
+}
+
+.topbar__brand {
+  font-size: 18px;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar__link,
+.topbar__action {
+  font: var(--font-small);
+  font-weight: 500;
+  color: var(--color-nav-link);
+  text-decoration: none;
+}
+
+.navbar__link:hover,
+.navbar__link[aria-current="page"],
+.topbar__action:hover {
+  color: var(--color-surface);
+}
+
+/* a clear ring on the dark bars */
+.navbar :focus-visible,
+.topbar :focus-visible {
+  outline-color: var(--color-surface);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: var(--color-secondary);
+}
+
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--nav-height);
+  padding: 0 var(--space-6) env(safe-area-inset-bottom);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.bottom-nav__item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;                    /* easy to tap */
+  padding: 0 var(--space-2);
+  font: var(--font-caption);
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.bottom-nav__item:hover {
+  color: var(--color-primary-dark);
+}
+
+.bottom-nav__item[aria-current="page"] {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ---------- 8. Desktop (768 px and wider) ---------------------------------------------- */
+@media (min-width: 768px) {
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+    padding: 0 var(--space-6);
+    background: var(--color-secondary);
+  }
+
+  .topbar,
+  .bottom-nav {
+    display: none;
+  }
+
+  .item {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .entry {
+    grid-template-columns: 200px 120px 1fr 1fr;   /* Figma Audit Logs columns */
+    gap: var(--space-6);
+    align-items: center;
+  }
+}
